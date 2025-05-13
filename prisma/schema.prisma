@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -35,4 +35,50 @@ model User {
   email     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model PropertiesDistressed {
+  id                       String    @id
+  formattedAddress         String?
+  addressLine1             String?
+  addressLine2             String?
+  city                     String?
+  state                    String?
+  zipCode                  String?
+  county                   String?
+  latitude                 String?
+  longitude                String?
+  propertyType             String?
+  squareFootage            String?
+  lotSize                  String?
+  yearBuilt                String?
+  assessorID               String?
+  legalDescription         String?
+  features                 String?
+  taxAssessments           String?
+  propertyTaxes            String?
+  owner                    String?
+  ownerOccupied            String?
+  subdivision              String?
+  lastSaleDate             String?
+  lastSalePrice            String?
+  history                  String?
+  bathrooms                String?
+  bedrooms                 String?
+  zoning                   String?
+  hoa                      String?
+  street_view_capture_date DateTime? @db.Date
+  process_date             DateTime? @db.Date
+  prob_abandoned           Float?
+  prob_empty               Float?
+  prob_occupied            Float?
+  predicted_label          String?   @db.VarChar(50)
+  weighted_label           String?   @db.VarChar(50)
+  distressed_score         Int?
+
+  @@index([formattedAddress(ops: raw("gin_trgm_ops"))], map: "idx_properties_formattedaddress_trgm", type: Gin)
+  @@index([id])
+  @@index([state])
+  @@index([zipCode])
+  @@map("properties_distressed")
 }

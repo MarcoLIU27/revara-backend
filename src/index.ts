@@ -5,12 +5,12 @@ import authorRouter from './routes/author.router';
 import bookRouter from './routes/book.router';
 import authRouter from './routes/auth.router';
 import profileRouter from './routes/profile.router';
+import propertiesRouter from './routes/properties.router';
 import { notFoundHandler } from './middleware/not-found';
 import { errorHandler } from './middleware/error-handler';
 import cookieParser from 'cookie-parser';
 import requestLogger from './middleware/requestLogger';
 import { pino } from "pino";
-
 dotenv.config();
 
 export const logger = pino({ name: "server start" });
@@ -36,12 +36,21 @@ app.use(cookieParser());
 // Request Logger
 app.use(requestLogger)
 
+// Health Check Endpoint
+app.get('/health', (req, res) => {
+  res.status(200).json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    uptime: process.uptime()
+  });
+});
+
 // Main Routes
 app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
 app.use('/api/authors', authorRouter);
 app.use('/api/books', bookRouter);
-
+app.use('/api/properties', propertiesRouter);
 // Not Found Middleware
 app.use(notFoundHandler);
 
