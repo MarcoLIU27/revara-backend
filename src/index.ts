@@ -20,12 +20,16 @@ const app = express();
 
 // CORS Middleware
 const corsOptions = {
-  origin: process.env.APP_ENV == 'developement' ? '*' : process.env.ORIGIN,
+  origin: process.env.APP_ENV == 'development' ? '*' : process.env.ORIGIN,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
 };
 app.use(cors(corsOptions));
+app.use((req, res, next) => {
+  console.log('CORS passed:', req.method, req.path);
+  next();
+});
 // JSON Middleware & Form Data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -57,6 +61,6 @@ app.use(notFoundHandler);
 // Error Handling Middleware
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  logger.info(`Listening on PORT ${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  console.log('Server running on http://localhost:6000');
 });

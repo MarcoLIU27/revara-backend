@@ -5,14 +5,21 @@ import { sendSuccessResponse } from '../utils/responseHandler';
 export const searchProperties = async (request: Request, response: Response, next: NextFunction) => {
     try {
         const { search, filters, page, pageSize } = request.query;
+        let parsedFilters: Record<string, any> = {};
+        if (typeof filters === 'string') {
+            try {
+                parsedFilters = JSON.parse(filters);
+            } catch (e) {
+                return response.status(400).json({ success: false, error: 'Invalid filters JSON' });
+            }
+        }
 
-        // 转换分页参数为数字，并提供默认值
         const pageNum = page ? parseInt(page as string, 10) : 1;
         const pageSizeNum = pageSize ? parseInt(pageSize as string, 10) : 20;
 
         const properties = await PropertiesService.searchProperties(
             search as string,
-            filters as Record<string, any>,
+            parsedFilters,
             pageNum,
             pageSizeNum
         );
