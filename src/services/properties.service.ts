@@ -9,15 +9,15 @@ export const searchProperties = async (
 ): Promise<{ data: any[]; total: number; page: number; pageSize: number }> => {
     const where: Prisma.PropertiesDistressedWhereInput = {};
 
-    // 添加搜索条件
+    // Add search condition
     if (search) {
-        where.formattedAddress = {
+        where.searchaddress = {
             contains: search,
             mode: 'insensitive'
         };
     }
 
-    // 添加其他过滤条件
+    // Add other filter conditions
     if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
             if (value !== undefined && value !== null) {
@@ -26,10 +26,10 @@ export const searchProperties = async (
         });
     }
 
-    // 计算总数
+    // Calculate total count
     const total = await db.propertiesDistressed.count({ where });
 
-    // 获取分页数据
+    // Get paginated data
     const data = await db.propertiesDistressed.findMany({
         where,
         orderBy: {

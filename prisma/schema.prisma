@@ -49,7 +49,7 @@ model PropertiesDistressed {
   latitude                 String?
   longitude                String?
   propertyType             String?
-  squareFootage            String?
+  squareFootage            Float?
   lotSize                  String?
   yearBuilt                String?
   assessorID               String?
@@ -75,10 +75,20 @@ model PropertiesDistressed {
   predicted_label          String?   @db.VarChar(50)
   weighted_label           String?   @db.VarChar(50)
   distressed_score         Int?
+  attomid                  String?
+  construction             String?
+  interior                 String?
+  pool                     String?
+  poolarea                 Float?
+  searchaddress            String?
+  vacancy                  Boolean?
+  foreclosure              Boolean?
+  image_url                String?
 
-  @@index([formattedAddress(ops: raw("gin_trgm_ops"))], map: "idx_properties_formattedaddress_trgm", type: Gin)
+  @@index([searchaddress(ops: raw("gin_trgm_ops"))], map: "idx_searchaddress_trgm", type: Gin)
+  @@index([formattedAddress(ops: raw("gin_trgm_ops"))], type: Gin)
   @@index([id])
   @@index([state])
   @@index([zipCode])
-  @@map("properties_distressed")
+  @@map("properties_distressed_duval_test")
 }
