@@ -48,9 +48,29 @@ export const searchProperties = async (
 };
 
 export const getProperty = async (id: string): Promise<any | null> => {
-    return db.propertiesDistressed.findUnique({
-        where: {
-            id
-        }
+    const property = await db.propertiesDistressed.findUnique({
+        where: { id }
     });
+
+    if (!property) {
+        throw new Error('Property not found');
+    }
+
+    return property;
+};
+
+export const deleteProperty = async (id: string) => {
+    const property = await db.propertiesDistressed.findUnique({
+        where: { id }
+    });
+
+    if (!property) {
+        throw new Error('Property not found');
+    }
+
+    await db.propertiesDistressed.delete({
+        where: { id }
+    });
+
+    return true;
 }; 

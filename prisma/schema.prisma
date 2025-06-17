@@ -7,36 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Author {
-  id        Int      @id @default(autoincrement())
-  firstName String
-  lastName  String
-  Book      Book[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model Book {
-  id            Int      @id @default(autoincrement())
-  title         String
-  isFiction     Boolean
-  datePublished DateTime
-  author        Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId      Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-}
-
-model User {
-  id        String   @id @unique
-  fullName  String
-  username  String   @unique
-  password  String
-  email     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model PropertiesDistressed {
   id                       String    @id
   formattedAddress         String?
@@ -91,4 +61,31 @@ model PropertiesDistressed {
   @@index([state])
   @@index([zipCode])
   @@map("properties_distressed_duval_test")
+}
+
+model users {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  full_name      String
+  username       String      @unique
+  email          String      @unique
+  password       String
+  role           user_role   @default(USER)
+  status         user_status @default(ACTIVE)
+  email_verified Boolean?    @default(false)
+  profile_image  String?
+  credits        Int         @default(0)
+  last_login_at  DateTime?   @db.Timestamp(6)
+  created_at     DateTime?   @default(now()) @db.Timestamp(6)
+  updated_at     DateTime?   @default(now()) @db.Timestamp(6)
+}
+
+enum user_role {
+  ADMIN
+  USER
+}
+
+enum user_status {
+  ACTIVE
+  INACTIVE
+  DELETED
 }

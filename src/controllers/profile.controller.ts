@@ -1,16 +1,20 @@
 import { TuserUpdateSchema, userUpdateSchema } from '../types/zod';
 import { NextFunction, Request, Response } from 'express';
 import * as UserService from '../services/user.service';
-import { sendSuccessResponse } from '../utils/responseHandler';
-import { hashPassword } from '../utils/bcryptHandler';
+import { sendBadRequestResponse, sendSuccessResponse, sendUnauthorizedResponse } from '../utils/responseHandler';
 
 export const getUserProfile = async (request: Request, response: Response, next: NextFunction) => {
   try {
     const user = {
       id: request.user?.id,
-      fullName: request.user?.fullName,
+      fullName: request.user?.full_name,
       username: request.user?.username,
       email: request.user?.email,
+      role: request.user?.role,
+      status: request.user?.status,
+      email_verified: request.user?.email_verified,
+      profile_image: request.user?.profile_image,
+      credits: request.user?.credits,
     };
     return sendSuccessResponse(response, user);
   } catch (error) {
@@ -24,12 +28,21 @@ export const updateUserProfile = async (request: Request, response: Response, ne
     if (request.user) {
       userId = request.user?.id;
     }
+    if (!userId) {
+      return sendUnauthorizedResponse(response, 'Unauthorized');
+    }
     const data: TuserUpdateSchema = request.body;
-    const password = data.password;
-    const hashedPassword = await hashPassword(password);
-    const dataWithHash = { ...data, password: hashedPassword };
+    const updatedData: Partial<TuserUpdateSchema> = {};
 
-    const user = await UserService.updateUserByID(userId, dataWithHash);
+    if (data.fullName) {
+      updatedData.fullName = data.fullName;
+    }
+
+    if (Object.keys(updatedData).length === 0) {
+      return sendBadRequestResponse(response, 'No valid fields to update');
+    }
+    console.log(updatedData);
+    const user = await UserService.updateUserByID(userId, updatedData);
     return sendSuccessResponse(response, user);
   } catch (error) {
     next(error);

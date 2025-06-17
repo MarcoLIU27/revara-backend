@@ -1,8 +1,6 @@
 import * as dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
-import authorRouter from './routes/author.router';
-import bookRouter from './routes/book.router';
 import authRouter from './routes/auth.router';
 import profileRouter from './routes/profile.router';
 import propertiesRouter from './routes/properties.router';
@@ -53,8 +51,6 @@ app.get('/health', (req, res) => {
 // Main Routes
 app.use('/api/auth', authRouter);
 app.use('/api/profile', profileRouter);
-app.use('/api/authors', authorRouter);
-app.use('/api/books', bookRouter);
 app.use('/api/properties', propertiesRouter);
 app.use('/api/contracts', contractsRouter);
 // Not Found Middleware

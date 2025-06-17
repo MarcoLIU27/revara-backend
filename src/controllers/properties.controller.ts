@@ -37,4 +37,14 @@ export const getProperty = async (request: Request, response: Response, next: Ne
     } catch (error: any) {
         next(error);
     }
+};
+
+export const deleteProperty = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const { id } = request.params;
+        await PropertiesService.deleteProperty(id);
+        return sendSuccessResponse(response, { message: 'Property deleted successfully' });
+    } catch (error: any) {
+        next(error);
+    }
 }; 
