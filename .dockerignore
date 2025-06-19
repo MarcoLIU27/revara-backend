@@ -27,9 +27,6 @@ pids
 coverage
 .nyc_output
 
-# Dependency lock files (we will regenerate them in the container)
-package-lock.json
-
 # Git related
 .git
 .gitignore
