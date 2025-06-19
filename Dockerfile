@@ -1,9 +1,22 @@
-FROM node:18
+# Build stage
+FROM node:18 AS builder
 WORKDIR /app
 
+# Copy package files & install deps
 COPY package*.json ./
 RUN npm install
 
+# Copy source files & build
 COPY . .
-EXPOSE 6000
-CMD ["npm", "start"]
+RUN npm run build
+
+# --- Production stage ---
+FROM node:18 AS runner
+WORKDIR /app
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/package*.json ./
+RUN npm ci --omit=dev
+
+EXPOSE 3000
+CMD ["node", "dist/index.js"]
