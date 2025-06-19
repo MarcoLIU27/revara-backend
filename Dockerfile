@@ -18,7 +18,9 @@ WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
-RUN npm ci --omit=dev
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma  # ✅ Ensure client runtime files
+COPY --from=builder /app/prisma ./prisma                              # ✅ Optional but useful for migration etc.
 
 EXPOSE 6000
 CMD ["node", "dist/index.js"]
