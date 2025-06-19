@@ -8,6 +8,8 @@ RUN npm ci
 
 # Copy source files & build
 COPY . .
+# Generate Prisma client
+RUN npx prisma generate
 RUN npm run build
 
 # --- Production stage ---
