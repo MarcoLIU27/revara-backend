@@ -6,19 +6,16 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: production
+      target: development
     ports:
       - "6000:6000"
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
+      - APP_ENV="development"
+      - DATABASE_URL="postgresql://postgres:v%5Dr9hQ11Oc%29o2nE0%3F0F%2A7y~%23gZf~@rentcast.cxyc4qq4qs5o.us-west-1.rds.amazonaws.com:5432/rentcast"
       - PORT=6000
-      # Database connection string - please modify according to actual situation
-      - DATABASE_URL=postgresql://postgres:password@db:5432/revara_db
-      # JWT secret - please set a secure key
-      - JWT_SECRET=your-super-secret-jwt-key
-      # Other environment variables
-      - APP_ENV=production
-      - ORIGIN=http://localhost:3000
+      - JWT_SECRET="revara-ai-web-app-jwt-secret-test"
+      - ORIGIN="https://your-production-website.com"
     depends_on:
       - db
     restart: unless-stopped
@@ -33,9 +30,9 @@ services:
   db:
     image: postgres:15-alpine
     environment:
-      - POSTGRES_DB=revara_db
+      - POSTGRES_DB=rentcast
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_PASSWORD=v%5Dr9hQ11Oc%29o2nE0%3F0F%2A7y~%23gZf~
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./prisma/migrations:/docker-entrypoint-initdb.d
