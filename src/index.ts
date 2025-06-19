@@ -14,7 +14,7 @@ import { pino } from "pino";
 dotenv.config();
 
 export const logger = pino({ name: "server start" });
-const PORT: number = parseInt(process.env.PORT as string, 10);
+const PORT = parseInt(process.env.PORT || "6000", 10);
 
 const app = express();
 
