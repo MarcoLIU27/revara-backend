@@ -146,6 +146,32 @@ export const getSavedCashBuyers = async (
     page: number = 1,
     pageSize: number = 20
 ) => {
+    // If pageSize is 0, return all data without pagination
+    if (pageSize === 0) {
+        const savedBuyers = await db.user_saved_buyers.findMany({
+            where: { user_id: userId },
+            include: {
+                cash_buyers: true
+            },
+            orderBy: {
+                saved_at: 'desc'
+            }
+        });
+
+        return {
+            data: savedBuyers.map(item => ({
+                ...item.cash_buyers,
+                saved_at: item.saved_at
+            })),
+            pagination: {
+                page: 1,
+                pageSize: 0,
+                total: savedBuyers.length,
+                totalPages: 1
+            }
+        };
+    }
+
     const skip = (page - 1) * pageSize;
 
     const [savedBuyers, total] = await Promise.all([

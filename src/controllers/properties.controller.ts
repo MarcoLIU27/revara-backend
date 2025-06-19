@@ -94,8 +94,9 @@ export const getSavedProperties = async (request: Request, response: Response, n
         }
 
         const pageNum = page ? parseInt(page as string, 10) : 1;
-        const pageSizeNum = pageSize ? parseInt(pageSize as string, 10) : 20;
+        const pageSizeNum = pageSize ? parseInt(pageSize as string, 10) : 10;
 
+        // If pageSize is 0, pass 0 to service to get all data
         const savedProperties = await PropertiesService.getSavedProperties(user.id, pageNum, pageSizeNum);
         return sendSuccessResponse(response, savedProperties);
     } catch (error: any) {

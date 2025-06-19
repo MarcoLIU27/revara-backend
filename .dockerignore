@@ -1,0 +1,67 @@
+# Dependencies directory
+node_modules
+npm-debug.log*
+
+# Build output
+dist
+build
+
+# Environment variable files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Log files
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory
+coverage
+.nyc_output
+
+# Dependency lock files (we will regenerate them in the container)
+package-lock.json
+
+# Git related
+.git
+.gitignore
+
+# IDE related
+.vscode
+.idea
+*.swp
+*.swo
+
+# Operating system related
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp
+temp
+
+# Test related
+test
+tests
+__tests__
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Documentation
+README.md
+docs
+
+# Docker related
+Dockerfile*
+docker-compose*
+.dockerignore 

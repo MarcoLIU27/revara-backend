@@ -103,6 +103,32 @@ export const getSavedProperties = async (
     page: number = 1,
     pageSize: number = 20
 ) => {
+    // If pageSize is 0, return all data without pagination
+    if (pageSize === 0) {
+        const savedProperties = await db.user_saved_properties.findMany({
+            where: { user_id: userId },
+            include: {
+                properties_distressed_duval_test: true
+            },
+            orderBy: {
+                saved_at: 'desc'
+            }
+        });
+
+        return {
+            data: savedProperties.map(item => ({
+                ...item.properties_distressed_duval_test,
+                saved_at: item.saved_at
+            })),
+            pagination: {
+                page: 1,
+                pageSize: 0,
+                total: savedProperties.length,
+                totalPages: 1
+            }
+        };
+    }
+
     const skip = (page - 1) * pageSize;
 
     const [savedProperties, total] = await Promise.all([
