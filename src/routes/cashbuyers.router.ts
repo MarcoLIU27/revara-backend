@@ -4,6 +4,9 @@ import { protectAuth } from '../middleware/auth-middleware';
 
 const router = express.Router();
 
+// Create cash buyer submission (public endpoint - no auth required)
+router.post('/submission', CashBuyersController.createCashBuyerSubmission);
+
 // Search and get list of cash buyers
 router.get('/list', protectAuth, CashBuyersController.searchCashBuyers);
 

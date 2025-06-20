@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import * as CashBuyersService from '../services/cashbuyers.service';
-import { sendSuccessResponse, sendUnauthorizedResponse } from '../utils/responseHandler';
+import { sendSuccessResponse, sendUnauthorizedResponse, sendBadRequestResponse } from '../utils/responseHandler';
 
 // Search and get list of cash buyers
 export const searchCashBuyers = async (request: Request, response: Response, next: NextFunction) => {
@@ -97,6 +97,29 @@ export const getSavedCashBuyers = async (request: Request, response: Response, n
         // If pageSize is 0, pass 0 to service to get all data
         const savedCashBuyers = await CashBuyersService.getSavedCashBuyers(user.id, pageNum, pageSizeNum);
         return sendSuccessResponse(response, savedCashBuyers);
+    } catch (error: any) {
+        next(error);
+    }
+};
+
+// Create cash buyer submission
+export const createCashBuyerSubmission = async (request: Request, response: Response, next: NextFunction) => {
+    try {
+        const { name, address, phone, email } = request.body;
+
+        // Validate required fields
+        if (!name) {
+            return sendBadRequestResponse(response, 'Name is required');
+        }
+
+        const submission = await CashBuyersService.createCashBuyerSubmission({
+            name,
+            address,
+            phone,
+            email
+        });
+
+        return sendSuccessResponse(response, submission, 201);
     } catch (error: any) {
         next(error);
     }

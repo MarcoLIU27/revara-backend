@@ -203,4 +203,22 @@ export const getSavedCashBuyers = async (
             totalPages: Math.ceil(total / pageSize)
         }
     };
+};
+
+// Create cash buyer submission
+export const createCashBuyerSubmission = async (submissionData: {
+    name: string;
+    address?: string;
+    phone?: string;
+    email?: string;
+}) => {
+    return db.cash_buyer_submissions.create({
+        data: {
+            name: submissionData.name,
+            address: submissionData.address,
+            phone: submissionData.phone,
+            email: submissionData.email,
+            status: 'under_review', // Default status
+        }
+    });
 }; 
