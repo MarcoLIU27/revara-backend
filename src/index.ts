@@ -19,17 +19,35 @@ const PORT = parseInt(process.env.PORT || "6000", 10);
 const app = express();
 
 // CORS Middleware
+const allowedOrigins = [
+  'http://localhost:8080',
+  'https://preview--revara.lovable.app',
+  'https://revara.lovable.app',
+  process.env.ORIGIN
+].filter(Boolean);
+
 const corsOptions = {
-  origin: process.env.APP_ENV == 'development' ? '*' : process.env.ORIGIN,
+  origin: function (origin: string | undefined, callback: (arg0: Error | null, arg1: boolean | undefined) => void) {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      console.warn('CORS blocked:', origin);
+      callback(new Error('Not allowed by CORS'), false);
+    }
+  },
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
 };
+
 app.use(cors(corsOptions));
+
 app.use((req, res, next) => {
   console.log('CORS passed:', req.method, req.path);
   next();
 });
+
 // JSON Middleware & Form Data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
