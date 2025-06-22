@@ -19,17 +19,13 @@ export const login = async (request: Request, response: Response, next: NextFunc
     if (passwordCompare) {
       const token = generateToken({ id: user.id }, '30d');
 
-      response.cookie('jwt', token, {
-        httpOnly: true,
-        secure: process.env.APP_ENV !== 'developement',
-        sameSite: 'none',
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-      });
-
       const responseData = {
-        fullName: user.full_name,
-        username: user.username,
-        email: user.email,
+        token,
+        user: {
+          fullName: user.full_name,
+          username: user.username,
+          email: user.email,
+        }
       };
       return sendSuccessResponse(response, responseData);
     } else {
@@ -79,13 +75,8 @@ export const signup = async (request: Request, response: Response, next: NextFun
 
 export const logout = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    response.clearCookie('jwt', {
-      httpOnly: true,
-      secure: process.env.APP_ENV !== 'developement',
-      sameSite: 'none',
-      path: '/',
-    });
-
+    // Since we use token authentication, client needs to delete token themselves
+    // Here we just return success message
     return sendSuccessNoDataResponse(response, 'Logged out successfully');
   } catch (error: any) {
     next(error);
@@ -141,6 +132,31 @@ export const changePassword = async (request: Request, response: Response, next:
     });
 
     return sendSuccessNoDataResponse(response, 'Password updated successfully');
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export const refreshToken = async (request: Request, response: Response, next: NextFunction) => {
+  try {
+    const user = request.user;
+
+    if (!user) {
+      return sendUnauthorizedResponse(response, 'User not found');
+    }
+
+    const newToken = generateToken({ id: user.id }, '30d');
+
+    const responseData = {
+      token: newToken,
+      user: {
+        fullName: user.full_name,
+        username: user.username,
+        email: user.email,
+      }
+    };
+
+    return sendSuccessResponse(response, responseData);
   } catch (error: any) {
     next(error);
   }

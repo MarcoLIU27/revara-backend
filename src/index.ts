@@ -8,7 +8,6 @@ import contractsRouter from './routes/contracts.router';
 import cashbuyersRouter from './routes/cashbuyers.router';
 import { notFoundHandler } from './middleware/not-found';
 import { errorHandler } from './middleware/error-handler';
-import cookieParser from 'cookie-parser';
 import requestLogger from './middleware/requestLogger';
 import { pino } from "pino";
 dotenv.config();
@@ -52,9 +51,6 @@ app.use((req, res, next) => {
 // JSON Middleware & Form Data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
-// cookie parser middleware
-app.use(cookieParser());
 
 // Request Logger
 app.use(requestLogger)

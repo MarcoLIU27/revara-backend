@@ -14,7 +14,7 @@ An Express-based RESTful API with TypeScript and Prisma , managing both authenti
 - [x] Prima as ORM
 - [x] Seed Script
 - [x] Authentication Routes (/Login , /Logout)
-- [x] JWT (HTTP-Only)
+- [x] JWT Token-based Authentication (Authorization Header)
 - [x] Protected Routes
 - [x] Validation With Zod as middleware
 - [x] Error Handler middleware :
@@ -26,6 +26,23 @@ An Express-based RESTful API with TypeScript and Prisma , managing both authenti
 - [x] Custom Handler for Response
 - [x] Custom HTTP Codes enum list
 - [x] CORS Middleware with custom config object
+
+## Authentication
+
+This API uses JWT token-based authentication:
+
+- **Login**: `POST /auth/login` - Get JWT token
+- **Refresh Token**: `POST /auth/refresh-token` - Refresh expired token
+- **Logout**: `POST /auth/logout` - Logout (client clears token)
+- **Get User Info**: `GET /auth/me` - Get current user info
+
+### Usage
+
+1. Get token after login
+2. Add to request headers: `Authorization: Bearer <token>`
+3. Call refresh-token endpoint when token expires
+
+For detailed documentation see: [AUTH_API.md](./AUTH_API.md)
 
 ## Icoming Features
 

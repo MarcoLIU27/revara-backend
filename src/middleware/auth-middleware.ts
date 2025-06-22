@@ -4,8 +4,10 @@ import { sendBadRequestResponse } from '../utils/responseHandler';
 import { verifyToken } from '../utils/jwtHandler';
 
 const protectAuth = async (request: Request, response: Response, next: NextFunction) => {
-  const allCookies = request.cookies;
-  const token = allCookies.jwt;
+  // Get token from header
+  const authHeader = request.headers.authorization;
+  const token = authHeader && authHeader.startsWith('Bearer ') ? authHeader.substring(7) : null;
+
   if (token) {
     try {
       const decoded = verifyToken(token);
@@ -15,6 +17,11 @@ const protectAuth = async (request: Request, response: Response, next: NextFunct
       }
       next();
     } catch (error: any) {
+      if (error.name === 'TokenExpiredError') {
+        return sendBadRequestResponse(response, 'Token expired');
+      } else if (error.name === 'JsonWebTokenError') {
+        return sendBadRequestResponse(response, 'Invalid token');
+      }
       next(error);
     }
   } else {
@@ -36,6 +43,5 @@ const isAdmin = (req: Request, res: Response, next: NextFunction) => {
 
   next();
 };
-
 
 export { protectAuth, isAdmin };

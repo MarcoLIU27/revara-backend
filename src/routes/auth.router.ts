@@ -18,11 +18,16 @@ router.post('/signup', AuthController.validateSignupData, AuthController.signup)
 router.post('/logout', protectAuth, AuthController.logout);
 
 // Access: Private
-// GET: me
+// GET: me - get current user info
 router.get('/me', protectAuth, AuthController.me);
 
 // Access: Private
-// POST: change password
+// POST: refresh-token - refresh JWT token
+router.post('/refresh-token', protectAuth, AuthController.refreshToken);
+
+// Access: Private
+// POST: change-password
+// Params body: currentPassword, newPassword
 router.post('/change-password', protectAuth, AuthController.changePassword);
 
 export default router;
