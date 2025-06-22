@@ -79,7 +79,13 @@ export const signup = async (request: Request, response: Response, next: NextFun
 
 export const logout = async (request: Request, response: Response, next: NextFunction) => {
   try {
-    response.clearCookie('jwt');
+    response.clearCookie('jwt', {
+      httpOnly: true,
+      secure: process.env.APP_ENV !== 'developement',
+      sameSite: 'none',
+      path: '/',
+    });
+
     return sendSuccessNoDataResponse(response, 'Logged out successfully');
   } catch (error: any) {
     next(error);
